@@ -1,0 +1,478 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>
+			放生－功德無量 (v0.6)
+		</title>
+		<style>
+			#MainDiv
+			{
+				position:absolute;
+				top:0;
+				left:0%;
+				height:100%;
+				width:100%;
+				background-image:url("https://upload.cc/i1/2018/12/30/HLgOIu.jpg");
+			}
+			.Informations
+			{
+				position:absolute;
+			}
+			.NormalButton
+			{
+				height:15%;
+				width:88%;
+				position:absolute;
+				background-color:#282C34;
+			}
+			.ConsoleFont
+			{
+				position:absolute;
+				top:10%;
+				left:5%;
+				font-family:Microsoft JhengHei;
+			}
+			.ConsoleFont2
+			{
+				position:absolute;
+				top:50%;
+				left:5%;
+				font-family:Microsoft JhengHei;
+			}
+			#Bag
+			{
+				position:absolute;
+				top:20%;
+				left:82%;
+				height:65%;
+				width:16%;
+				background-image:url("https://upload.cc/i1/2018/12/30/pkm7cu.png");
+			}
+			#Information
+			{
+				position:absolute;
+				top:20%;
+				left:2%;
+				height:65%;
+				width:16%;
+				background-image:url("https://upload.cc/i1/2018/12/30/pkm7cu.png");
+			}
+			#Store
+			{
+				position:absolute;
+				top:20%;
+				left:82%;
+				height:65%;
+				width:16%;
+				background-color:rgba(245,213,126,0.40);
+			}
+			#InformationList
+			{
+				position:absolute;
+				font-size:130%;
+				top:3.5%;
+				left:14%;
+			}
+			#Mprint1
+			{
+				top:3.2em;
+				left:1em;
+			}
+			#Mprint2
+			{
+				position:absolute;
+				top:14%;
+				left:82%;
+				font-family:Microsoft JhengHei;
+			}
+			#Cprint
+			{
+				top:4.9em;
+				left:1em;
+			}
+			#CDprint
+			{
+				top:6.1em;
+				left:1em;
+			}
+			#RAprint
+			{
+				top:90%;
+				left:1em;
+			}
+			#IncreaseCritButton
+			{
+				top:1em;
+				left:1em;
+			}
+			#IncreaseCritDmgButton
+			{
+				top:6em;
+				left:1em;
+			}
+			
+			#PowerDiv
+			{
+				position:absolute;
+				top:0;
+				left:0%;
+				height:100%;
+				width:100%;
+				background-image:url("https://i.imgur.com/HW97Y94.jpg");
+			}
+			
+			#StoreDiv
+			{
+				position:absolute;
+				top:0;
+				left:0%;
+				height:100%;
+				width:100%;
+				background-position:bottom left;
+				background-image:url("https://upload.cc/i1/2019/04/15/smtSPD.jpg")
+
+			}
+			#Console
+			{
+				position:absolute;
+				top:1%;
+				left:0%;
+				height:8%;
+				width:99.5%;
+			}
+			#CheatReleasing
+			{
+				position:absolute;
+				top:1%;
+				left:1%;
+				height:95%;
+				width:14%;
+				background-color:#527EBD;
+				z-index:0;
+			}
+			#ReleasingCountDiv
+			{
+				position:absolute;
+				top:10%;
+				left:7%;
+				height:66%;
+				width:6.7%;
+				z-index:1;
+			}
+			#ReleasingCount
+			{
+				position:absolute;
+				top:10%;
+				left:10%;
+				height:100%;
+				width:100%;
+				z-index:2;
+			}
+			#ConsoleOutput
+			{
+				position:absolute;
+				top:30%;
+				left:70%;
+				height:40%;
+				width:29%;
+			}
+			#ConsoleHr
+			{
+				position:absolute;
+				top:110%;
+				left:1%;
+				width:98%;
+			}
+			
+			#DivSelects
+			{
+				position:absolute;
+				top:90%;
+				left:2%;
+				height:7%;
+				width:96%;
+				background-image:url("https://upload.cc/i1/2018/12/30/pkm7cu.png");
+			}
+			#ToMainButton
+			{
+				position:absolute;
+				top:5%;
+				left:1%;
+				height:90% !important;
+				width:12% !important;
+				background-color:#093EC9 !important;
+			}
+			#ToPowerButton
+			{
+				position:absolute;
+				top:5%;
+				left:14%;
+				height:90% !important;
+				width:12% !important;
+				background-color:#17DB32 !important;
+			}
+			#ToStoreButton
+			{
+				position:absolute;
+				top:5%;
+				left:27%;
+				height:90% !important;
+				width:12% !important;
+				background-color:#39413B !important;
+			}
+			#ImpClicks
+			{
+				height:200px !important;
+				width:200px !important;
+				top:40%;
+				left:41.5%;
+				background-color:#FF355D !important;
+				border-radius:100px;
+			}
+			#ImpClicksTxt
+			{
+				font-size:3em;
+				font-family:Microsoft JhengHei;
+			}
+			
+			.Hidden
+			{
+				visibility:hidden;
+			}
+			.Display
+			{
+				Visibility:visible;
+			}
+		</style>
+		<script>
+			var 功德點數 = 0;
+			var ItemsHave = {CriOverLoader:0};
+			
+			var 暴擊等級 = 1;
+			var 加暴傷 = 4;
+			var 暴擊升等需求 = 100;
+			var 暴傷升等需求 = 90;
+			
+			var Luckiness = 0.05;
+			
+			var Total = 0;
+			function GetDivMain()
+			{
+				document.getElementById("MainDiv").className = "Display";
+				document.getElementById("PowerDiv").className = "Hidden";
+				document.getElementById("StoreDiv").className = "Hidden";
+				if (window.innerHeight < 550 || window.innerWidth < 1280)
+				{
+					console.log("介面過小!");
+				}
+			}
+			function GetDivPower()
+			{
+				document.getElementById("MainDiv").className = "Hidden";
+				document.getElementById("PowerDiv").className = "Display";
+				document.getElementById("StoreDiv").className = "Hidden";
+				if (window.innerHeight < 550 || window.innerWidth < 1280)
+				{
+					console.log("介面過小!");
+				}
+			}
+			function GetDivStore()
+			{
+				document.getElementById("MainDiv").className = "Hidden";
+				document.getElementById("PowerDiv").className = "Hidden";
+				document.getElementById("StoreDiv").className = "Display";
+				if (window.innerHeight < 550 || window.innerWidth < 1280)
+				{
+					console.log("介面過小!");
+				}
+			}
+			function Releasing()
+			{
+				if (Math.floor(Math.random()*100)+1 <= 暴擊等級)
+				{
+					功德點數 += 加暴傷;
+				}
+				if (Math.floor(Math.random())+1 <= Luckiness)
+				{
+					ItemsHave.CriOverLoader += 1;
+				}
+				功德點數 += 1;
+				
+				Total += 1;
+				document.getElementById("Mprint1").innerHTML = "功德點數: " + 功德點數;
+				document.getElementById("Mprint2").innerHTML = "功德點數: " + 功德點數;
+				document.getElementById("RAprint").innerHTML = "<b>被放生的動物總計: <font color=\"purple\">" + Total + "</font></b>";
+			}
+			function IncreaseCritDmg()
+			{
+				if (功德點數 >= 暴傷升等需求)
+				{
+					if (加暴傷 != 20)
+					{
+						加暴傷 += 1;
+						功德點數 -= 暴傷升等需求;
+					}
+				}
+				暴傷升等需求 = -60 + (加暴傷 * 35);
+				document.getElementById("IncreaseCritDmgButton").innerHTML = "暴傷提昇<br /><font color=\"white\">需求:" + 暴傷升等需求 + "功德</font>";
+				document.getElementById("CDprint").innerHTML = "暴傷: " + "<font color = red>" + 加暴傷 + "</font>" + " (最高<font color=red>20</font>)";
+				document.getElementById("Mprint1").innerHTML = "功德點數: " + 功德點數;
+				document.getElementById("Mprint2").innerHTML = "功德點數: " + 功德點數;
+			}
+			function IncreaseCrit() 
+			{
+				if (功德點數 >= 暴擊升等需求)
+				{
+					if (暴擊等級 != 20)
+					{
+						暴擊等級 += 0.5;
+						功德點數 -= 暴擊升等需求;
+					}
+				}
+				暴擊升等需求 = 60 + (暴擊等級 * 30);
+				document.getElementById("IncreaseCritButton").innerHTML = "暴擊率提昇<br /><font color=\"white\">需求:" + 暴擊升等需求 + "功德</font>";
+				document.getElementById("Cprint").innerHTML = "暴擊率: " + "<font color = red>" + 暴擊等級 + "%</font>" + " (最高<font color =red>20%</font>)";
+				document.getElementById("Mprint1").innerHTML = "功德點數: " + 功德點數;
+				document.getElementById("Mprint2").innerHTML = "功德點數: " + 功德點數;
+			}
+			function Cheat(x = 0)
+			{
+				if (x <= 0)
+				{
+					return "nope.";
+				}
+				else
+				{
+					功德點數 += x;
+					document.getElementById("Mprint1").innerHTML = "功德點數: " + 功德點數;
+					document.getElementById("Mprint2").innerHTML = "功德點數: " + 功德點數;
+					return "你的功德圓滿了";
+				}
+			}
+			function CheatReleasing()
+			{
+				var Count = document.getElementById("ReleasingCount").value;
+				if (! isNaN(Count))
+				{
+					Cheat(Number(Count));
+					document.getElementById("ReleasingCount").value = 0;
+					document.getElementById("ConsoleOutput").value = "功德成功圓滿";
+				}
+				else if (document.getElementById("ConsoleOutput").value == "= =")
+				{
+					document.getElementById("ConsoleOutput").value = "= =!!!";
+				}
+				else
+				{
+					document.getElementById("ConsoleOutput").value = "= =";
+				}
+			}
+			function Update()
+			{
+				return "v0.4\n\n-新增 背景\n-新增 雜七雜八版\n-改變 Chilling畫風\n-技術新增 CSS排版法\n-技術新增 src引進圖片\n\n\nv0.4.5\n\n-修正 部分\"暴\" 打成 \"爆\"\n-修正 罰抄\"Value\"300遍\n\n\nv0.6\n\n-新增 更方便的指令按鈕\n\nSinse 1998\nNone of copyrights.";
+			}
+			function debug()
+			{
+				if (window.innerHeight < 550 || window.innerWidth < 1280)
+				{
+					console.log("介面過小!")
+				}
+			}
+			function init()
+			{
+				document.getElementById("IncreaseCritButton").innerHTML = "暴擊率提昇<br /><font color=\"white\">需求:90功德</font>";
+				document.getElementById("IncreaseCritDmgButton").innerHTML = "暴傷提昇<br /><font color=\"white\">需求:115功德</font>";
+				document.getElementById("Cprint").innerHTML = "暴擊率: " + "<font color = red>" + 暴擊等級 + "%</font>" + " (最高<font color =red>20%</font>)";
+				document.getElementById("CDprint").innerHTML = "暴傷: " + "<font color = red>" + 加暴傷 + "</font>" + " (最高<font color =red>20</font>)";
+				document.getElementById("RAprint").innerHTML = "<b>被放生的動物總計:<font color=\"purple\"> 0</font></b>";
+			}
+			function loop()
+			{
+				window.setTimeout("loop()",500)
+				document.getElementById("Bag").innerHTML = "" + ItemsHave.CriOverLoader
+			}
+			function dect()
+			{
+				console.log("lol");
+			}
+		</script>
+	</head>
+	<body onload="dect()">
+		<div id="MainDiv" class="Display">
+			<div id = "Information">
+				<font id = "InformationList">
+					<b>
+						統計表<br />
+					</b>
+				</font>
+				<font id = "Mprint1" class = "Informations Mprint">
+					功德點數: 0 <br />
+				</font>
+				<font id = "Cprint" class = "Informations">
+				</font>
+				<font id = "CDprint" class = "Informations">
+				</font>
+				<font id = "RAprint" class = "Informations">
+				</font>
+			</div>
+			<div id = "Bag">
+			</div>
+		</div>
+		<div id = "PowerDiv" class="Hidden">
+		</div>
+		<div id = "StoreDiv" class="Hidden">
+			<div id = "Console">
+				<button id = "CheatReleasing" class = "NormalButton" onclick="CheatReleasing()">
+					<font color="white" class = "ConsoleFont">
+						[CH3AT]
+					</font>
+					<font color="white" class = "ConsoleFont2">
+						功德無量機
+					</font>
+				</button>
+				<div id= "ReleasingCountDiv">
+					<input id= "ReleasingCount" type="text" value="0" />
+				</div>
+				<input id= "ConsoleOutput" type="text" value="Console;output" />
+				<hr id = "ConsoleHr" />
+			</div>
+			<div id = "Store">
+				<button id = "IncreaseCritButton" class = "NormalButton" onclick="IncreaseCrit()">
+				</button>
+				<button id = "IncreaseCritDmgButton" class = "NormalButton" onclick="IncreaseCritDmg()">
+				</button>
+			</div>
+			<font id = "Mprint2" class = "Mprint">
+				功德點數: 0 <br />
+			</font>
+		</div>
+		<button class = "NormalButton" id = "ImpClicks" onclick="Releasing()">
+			<font id = "ImpClicksTxt" color = "white">
+				<b>
+					-!放生!-
+				</b>
+			</font>
+		</button>
+		<div id ="DivSelects">
+			<button class = "NormalButton" id = "ToMainButton" onclick="GetDivMain()">
+				<font color = "white">
+					主要控制板
+				</font>
+			</button>
+			<button class = "NormalButton" id = "ToPowerButton" onclick="GetDivPower()">
+				<font color = "white">
+					能力
+				</font>
+			</button>
+			<button class = "NormalButton" id = "ToStoreButton" onclick="GetDivStore()">
+				<font color = "gray">
+					功德商店
+				</font>
+			</button>
+		</div>
+		<!--pretty important-->
+		<script>
+			init();loop();
+		</script>
+	</body>
+</html>
