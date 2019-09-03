@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<title>"idk"</title>
+	</head>
+	<body>
+		<img id="start_button" style="display: none;" src="resource/start_button.png">
+		<canvas id="canvas" style="position:absolute;top:0%;left:0%;z-index:1;"></canvas>
+		<script>
+			const cvs = document.getElementById("canvas");
+			const ctx = cvs.getContext("2d");
+			var buttons = [];
+			function place_meeting(x1,y1,width1,height1,x2,y2,width2,height2) {
+				if (((x1+width1 > x2-width2) && (x1-width1 < x2+width2)) && ((y1+height1 > y2-height2) && (y1-height1 < y2+height2))) {
+					return true;
+				}
+			}
+			var button = function (x,y,width,height,dobefore,draw,react) {
+				(dobefore)();
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.draw = draw;
+				this.react = react;
+			}
+			buttons[0] = new button(innerWidth/2,innerHeight/2,50,50,(() => {
+			}),(() => {
+				ctx.drawImage(document.getElementById("start_button"),buttons[0].x-50,buttons[0].y-50);
+			}),(()=>{
+				console.log("sb");
+			}))
+			function mousedown(e) {
+				for (let i = 0;i<buttons.length;i++) {
+					if (!!(place_meeting(buttons[i].x,buttons[i].y,buttons[i].width,buttons[i].height,e.clientX,e.clientY,1,1))) {
+						buttons[i].react();
+					}
+				}
+			}
+			function step() {
+				//ALL UPDATE
+				//before-start update
+				cvs.width = innerWidth;
+				cvs.height = innerHeight;
+				buttons[0].x = innerWidth/2;
+				buttons[0].y = innerHeight/2;
+				//before-start update done
+				//ALL UPDATE done
+
+				//ALL DRAW
+				ctx.clearRect(0,0,innerWidth,innerHeight);
+				for (let i = 0;i<buttons.length;i++) {
+					buttons[i].draw();
+				}
+				//ALL DRAW done
+			}
+			document.addEventListener("mousedown", mousedown, false);
+			var gameInterval = setInterval("step()",30);
+		</script>
+	</body>
+</html>
