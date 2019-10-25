@@ -1,0 +1,293 @@
+<html>
+	<head>
+		<style>
+		canvas
+		{
+			background: #eee;
+			position:absolute;
+			top:2%;
+			left:18%;
+		}
+		font
+		{
+			font-size: 8em;
+		}
+		</style>
+	</head>
+	<body>
+	<?php 
+	echo "Hello World!"; 
+?> 
+		<canvas id="Canvas" width="900" height="600" />
+		<font>xgfddddddddddddddddddddddddddddddD</font>
+		<script>
+			var canvas = document.getElementById("Canvas");
+			var ctx = canvas.getContext("2d");
+			var score = 0;
+			var rightPressed = false;
+			var leftPressed = false;
+			var barWi = 13;
+			var barHi = 5;
+			var barrier = [];
+			var ball = [];
+			var ballCount = 1;
+			/*OBJECT OUT*/
+			for (iteration=0;iteration<barHi;iteration++)
+			{
+				barrier[iteration] = [];
+				for (iteration2=0;iteration2<barWi;iteration2++)
+				{
+					(barrier[iteration])[iteration2] = new function()
+					{
+						this.countHi = iteration;
+						this.countWi = iteration2;
+						this.height = 57;
+						this.width = 57;
+						this.collideVar = null;
+						this.initialize = function()
+						{
+							this.x = 75+(iteration2*62);
+							this.y = 70+(iteration*62);
+							if (Math.random() > 0.5)
+							{
+								this.color = "#0095DD";
+							}
+							else
+							{
+								this.color = "#FF2B4A";
+							}
+						}
+						this.getcollide = function()
+						{
+							(barrier[this.countHi])[this.countWi] = null;
+							score += 1;
+						}
+						this.draw = function()
+						{
+							ctx.beginPath();
+							ctx.rect(this.x-(this.width/2),this.y-(this.height/2),this.width,this.height);
+							ctx.fillStyle = this.color;
+							ctx.fill();
+							ctx.closePath();
+						}
+					}
+				}
+			}
+			var board = new function()
+			{
+				this.height =18;
+				this.width = 150;
+				this.collideVar = 0;
+				this.x = (canvas.height/2)+(this.width/2);
+				this.y = (canvas.width/2)+140;
+				this.draw = function()
+				{
+					ctx.beginPath();
+					ctx.rect(this.x-(this.width/2),this.y-(this.height/2),this.width,this.height);
+					ctx.fillStyle = "#141012";
+					ctx.fill();
+					ctx.closePath();
+				}
+				this.getcollide = function()
+				{
+					NaN;
+				}
+			}
+				var ball = new function()
+				{
+					this.rdus = 15;
+					this.initialize = function()
+					{
+						this.x = (board.x+(board.width/2));
+						this.y = (canvas.width/2);
+						this.dx = 1.25;
+						this.dy = -1.25;
+						this.Xcooldown = 0;
+						this.Ycooldown = 0;
+					}
+					this.draw = function()
+					{
+						ctx.beginPath();
+						ctx.arc(this.x,this.y,this.rdus,0,Math.PI * 2);
+						ctx.fillStyle = "#0095DD";
+						ctx.fill();
+						ctx.closePath();
+					}
+					this.getXcollide = function()
+					{
+						if (this.Xcooldown <= 0)
+						{
+							this.dx = -this.dx;
+							this.Xcooldown = 10;
+						}
+					}
+					this.getYcollide = function()
+					{
+						if (this.Ycooldown <= 0)
+						{
+							this.dy = -this.dy;
+							this.Ycooldown = 10;
+						}
+					}
+					this.updating = function()
+					{
+						this.x += this.dx;
+						this.y += this.dy;
+						if (this.Xcooldown > 0)
+						{
+							this.Xcooldown -= 1;
+						}
+						if (this.Ycooldown > 0)
+						{
+							this.Ycooldown -= 1;
+						}
+					}
+				}
+				/*OBJECT OUT*/
+			function keyDownHandler(e) 
+			{
+				if(e.key == "d" || e.key == "ArrowRight")
+				{
+					rightPressed = true;
+				}
+				else if(e.key == "a" || e.key == "ArrowLeft")
+				{
+					leftPressed = true;
+				}
+			}
+			function keyUpHandler(e)
+			{
+				if(e.key == "d" || e.key == "ArrowRight")
+				{
+					rightPressed = false;
+				}
+				else if(e.key == "a" || e.key == "ArrowLeft")
+				{
+					leftPressed = false;
+				}
+			}
+			document.addEventListener("keydown", keyDownHandler, false);
+			document.addEventListener("keyup", keyUpHandler, false);
+            function Incollide(object,getHurt)
+            {
+            	if ((object.x < object.rdus) || (object.x > (getHurt.width-object.rdus)))
+				{
+					return "ud";
+				}
+				else
+				{
+					if (object.y < object.rdus)
+					{
+						return "lr";
+					}
+				}
+            }
+			/*ez collide idenifying*/
+			function collide(object,getHurt)
+            {
+				let Xcondition = ((object.x+object.rdus > getHurt.x-(getHurt.width/2)) && (object.x-object.rdus < getHurt.x+(getHurt.width/2)));
+				let Ycondition = ((object.y+object.rdus > getHurt.y-(getHurt.height/2)) && (object.y-object.rdus < getHurt.y+(getHurt.height/2)));
+				if (Xcondition)
+				{
+					getHurt.collideVar -= 1;
+				}
+				if (Ycondition)
+				{
+					getHurt.collideVar += 1;
+				}
+				if (!((Xcondition) || (Ycondition)))
+				{
+					getHurt.collideVar = null;
+				}
+				if ((Xcondition) && (Ycondition))
+				{
+					if (getHurt.collideVar > 0)
+					{
+						object.getXcollide();
+					}
+					if (getHurt.collideVar < 0)
+					{
+						object.getYcollide();
+					}
+					getHurt.getcollide();
+					getHurt.collideVar = null;
+				}
+            }
+			
+			for (iteration=0;iteration<barHi;iteration++)
+			{
+				for (iteration2 = 0;iteration2 < barWi;iteration2++)
+				{
+					(barrier[iteration][iteration2]).initialize();
+				}
+			}
+			for (iteration = 0;iteration < ballCount;iteration++)
+			{
+				ball.initialize();
+			}
+			
+			function drawScore()
+			{
+				ctx.font = "40px Microsoft JhengHei";
+				ctx.fillStyle = "#0095DD";
+				ctx.fillText("分數 : " + score, 10, 590);
+			}
+
+			function rendering() 
+			{
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				drawScore();
+				board.draw();
+				for (iteration=0;iteration<barHi;iteration++)
+				{
+					for (iteration2 = 0;iteration2 < barWi;iteration2++)
+					{
+						if ((barrier[iteration])[iteration2] == null)
+						{}
+						else
+						{
+							(barrier[iteration])[iteration2].draw();
+							collide(ball,(barrier[iteration])[iteration2]);
+						}
+					}
+				}
+				for (iteration = 0;iteration <ballCount;iteration++)
+				{
+					
+					ball.draw();
+					ball.updating();
+					collide(ball,board);
+					if (Incollide(ball,canvas) == "ud")
+					{
+						ball.dx = -ball.dx;
+					}
+					if (Incollide(ball,canvas) == "lr")
+					{
+						ball.dy = -ball.dy;
+					}
+				}
+				if (rightPressed)
+				{
+					if ((board.x + (board.width/2)) < 900)
+					{
+						board.x += 5;
+					}
+				}
+				else if (leftPressed)
+				{
+					if ((board.x - (board.width/2)) > 0)
+					{
+						board.x -= 5;
+					}
+				}
+				board.draw();
+			}
+			
+			function Start()
+			{
+				setInterval("rendering()", 2);
+			}
+			setInterval("rendering()", 2);
+		</script>
+	</body>
+</html>
